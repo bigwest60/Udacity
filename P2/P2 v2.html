@@ -197,6 +197,7 @@ div#notebook {
 <li><a href="https://en.wikipedia.org/wiki/Mann–Whitney_U_test">Mann-Whitney U test</a></li>
 <li><a href="https://www.youtube.com/watch?v=0CFFTJUZ2dc">Analyzing and Manipulating Data with Pandas</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">Coefficient of determination</a></li>
+<li><a href="http://www.ats.ucla.edu/stat/mult_pkg/faq/general/tail_tests.htm">Difference between One-tailed and Two-tailed tests</a></li>
 </ul>
 
 </div>
@@ -220,7 +221,7 @@ div#notebook {
 <p>1.1 ANSWER:</p>
 <ul>
 <li>Statistical test used: Whitney-Mann U test (explanation below)</li>
-<li>One-tail or two-tail: One tail being used because it does not matter if ridership is higher or lower.  Only that it is significantly different.</li>
+<li>One-tail or two-tail: Two-tailed being used because it does not matter if ridership is higher or lower.  Only that it is significantly different.</li>
 <li>Null hypothesis: There is no difference in ridership due to rain</li>
 <li>P-critical: .05 which reflects a 95% confidence level</li>
 </ul>
@@ -240,7 +241,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[128]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Initial setup</span>
@@ -272,14 +273,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[129]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Determine statistical test to use</span>
 <span class="c"># Try Shapiro-Wilk</span>
 
 <span class="n">w</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">shapiro</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">&#39;ENTRIESn_hourly&#39;</span><span class="p">])</span>
-
 <span class="k">print</span> <span class="s">&quot;P-value: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">p</span>
 <span class="k">print</span> <span class="s">&quot;Sample size: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">&#39;ENTRIESn_hourly&#39;</span><span class="p">])</span>
 <span class="k">print</span> <span class="s">&quot;NOTE: The p-value may not be accurate for sample size &gt; 5000&quot;</span>
@@ -310,7 +310,7 @@ So I will use a plot instead to make a determination
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[130]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="n">rain</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">rain</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;ENTRIESn_hourly&#39;</span><span class="p">]</span>
@@ -477,18 +477,19 @@ hfYAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[131]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c">#Mann-Whitney U test</span>
 
 <span class="n">U</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">mannwhitneyu</span><span class="p">(</span><span class="n">rain</span><span class="p">,</span> <span class="n">no_rain</span><span class="p">)</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">p_value</span> <span class="o">*</span> <span class="mi">2</span>
 
 <span class="n">rain_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rain</span><span class="p">)</span>
 <span class="n">no_rain_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">no_rain</span><span class="p">)</span>
 
 <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">1.3 ANSWER:&quot;</span>
-<span class="k">print</span> <span class="s">&quot;P-value: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">p_value</span>
+<span class="k">print</span> <span class="s">&quot;P-value (two-tail): </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">p_value</span>
 <span class="k">print</span> <span class="s">&quot;Rain mean: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">rain_mean</span>
 <span class="k">print</span> <span class="s">&quot;No Rain mean: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">no_rain_mean</span>
 </pre></div>
@@ -505,7 +506,7 @@ hfYAAAAASUVORK5CYII=
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 1.3 ANSWER:
-P-value: 2.74106957124e-06
+P-value (two-tail): 5.48213914249e-06
 Rain mean: 2028.19603547
 No Rain mean: 1845.53943866
 </pre>
@@ -528,13 +529,13 @@ No Rain mean: 1845.53943866
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[132]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="n">p_critical</span> <span class="o">=</span> <span class="o">.</span><span class="mo">01</span>
+<div class=" highlight hl-ipython2"><pre><span class="n">p_critical</span> <span class="o">=</span> <span class="o">.</span><span class="mo">05</span>
 
 <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">1.4 ANSWER:&quot;</span>
-<span class="k">print</span> <span class="s">&quot;P-critical:&quot;</span><span class="p">,</span> <span class="n">p_critical</span><span class="p">,</span> <span class="s">&quot;(99</span><span class="si">% s</span><span class="s">ignificance level)&quot;</span>
+<span class="k">print</span> <span class="s">&quot;P-critical:&quot;</span><span class="p">,</span> <span class="n">p_critical</span><span class="p">,</span> <span class="s">&quot;(95</span><span class="si">% s</span><span class="s">ignificance level)&quot;</span>
 <span class="k">print</span> <span class="s">&quot;P-value:&quot;</span><span class="p">,</span> <span class="n">p_value</span>
 
 <span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;=</span> <span class="n">p_critical</span><span class="p">:</span>
@@ -557,8 +558,8 @@ No Rain mean: 1845.53943866
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 1.4 ANSWER:
-P-critical: 0.01 (99% significance level)
-P-value: 2.74106957124e-06
+P-critical: 0.05 (95% significance level)
+P-value: 5.48213914249e-06
 The P-value is less than or equal to P-critical.  Therefore, the null hypothesis is rejected.
 The samples are not consistent with the null hypothesis.
 </pre>
@@ -583,7 +584,7 @@ The samples are not consistent with the null hypothesis.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[133]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># OLS</span>
@@ -653,7 +654,7 @@ dtype: float64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="prompt input_prompt">In&nbsp;[134]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">2.2 ANSWER&quot;</span>
@@ -711,7 +712,7 @@ Dummy: Index([u&apos;unit_R003&apos;, u&apos;unit_R004&apos;, u&apos;unit_R005&a
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[135]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># define features</span>
@@ -775,7 +776,7 @@ dtype: float64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># r-squared</span>
@@ -815,7 +816,7 @@ R^2: 0.460688847525
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>2.6    What does this R2 value mean for the goodness of fit for your regression model? Do you think this linear model to predict ridership is appropriate for this dataset, given this R2 value?</p>
-<p>2.6 ANSWER:  An R2 value under 50% does not seem to be a reasonable predictor of ridership based on the features modeled.</p>
+<p>2.6 ANSWER:  R2 value represents the ratio between the variance of the predictions with the variance of the data.  The R2 value shows the percentage of what can be explained to what cannot be explained.  The R2 value calculated for the imnproved v2 dataset shows that 46% of the variability is accounted for which would not be a reasonable predictor of ridership based on the features modeled.</p>
 
 </div>
 </div>
@@ -840,7 +841,7 @@ R^2: 0.460688847525
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="prompt input_prompt">In&nbsp;[137]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="n">rain</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">rain</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;ENTRIESn_hourly&#39;</span><span class="p">]</span>
@@ -1091,7 +1092,7 @@ JEnqLItiSZIkSVJn/f8IjgUQ+sAHoQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="prompt input_prompt">In&nbsp;[138]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="n">var</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">&#39;hour&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">ENTRIESn_hourly</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000000</span>
@@ -1332,9 +1333,9 @@ RK5CYII=
 <p>4.1    From your analysis and interpretation of the data, do more people ride the NYC subway when it is raining or when it is not raining?</p>
 <p>4.1 ANSWER:  Depends on which datasets get analyzed.  The two datsets (original, and improved v2) provided different conclusions.</p>
 <p><strong>Improved v2 (used in this analysis):</strong>
-The results from the Mann-Whitney U test provided a p-value of (2.74e-06).  This is much less (by many orders of magnitude) than that of the p-critical value with a significance level of 99%.  This value would indicate that the null hypothesis should be REJECTED.  By rejecting the null hypotheses (no change in ridership when it is raining), leads to the possibility of a change in ridership.</p>
+The results from the Mann-Whitney U test provided a p-value of (5.48e-06).  This is much less (by many orders of magnitude) than that of the p-critical value with a significance level of 95%.  This value would indicate that the null hypothesis should be REJECTED.  By rejecting the null hypotheses (no change in ridership when it is raining), leads to the possibility of a change in ridership.</p>
 <p><strong>Original (used for comparison):</strong>
-The results from the Mann-Whitney U test provided a p-value of (0.0249999127935).  This is greater than the p-critical value with a significance level of 99%.  This indicates that the null hypothesis should be ACCEPTED.  Accepting the null hypotheses indicates that there is no change in ridership when it is raining.</p>
+The results from the Mann-Whitney U test provided a p-value of (0.049999825587).  This is less (or equal if rounding to 2 decinal places) than the p-critical value with a significance level of 95%.  This indicates that the null hypothesis should also be REJECTED.  Which also leads to the possibility of a change in ridership.</p>
 
 </div>
 </div>
@@ -1345,7 +1346,7 @@ The results from the Mann-Whitney U test provided a p-value of (0.0249999127935)
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>4.2    What analyses lead you to this conclusion? You should use results from both your statistical tests and your linear regression to support your analysis.</p>
-<p>4.2 ANSWER:  First I needed to determine if the data was normal or non-normal before electing a statistical test.  The Shapio Wilk test was not good for datasets larger than 5000, so I plotted the data and determined that the dataset that was to be analyzed was non-normal.  Because the Welch's t-test is for normal datasets, I used the Mann-Whitney U test which is applicable for non-normal datasets.  With regards to Linear Regression, OLS using Statsmodels was used to compute theta.  This provided weights with negative values and causing the predictions to also have some negative values.  Since the R2 was under 50% and having negative prdictions, leads me to conclude that the linear regression model should not be used to predict ridership.  Analysis should be soley based on samples and not rely on machine learning.</p>
+<p>4.2 ANSWER:  First I needed to determine if the data was normal or non-normal before electing a statistical test.  The Shapio Wilk test was not good for datasets larger than 5000, so I plotted the data and determined that the dataset that was to be analyzed was non-normal.  Because the Welch's t-test is for normal datasets, I used the Mann-Whitney U test which is applicable for non-normal datasets.  With regards to Linear Regression, OLS using Statsmodels was used to compute theta.  This provided weights with negative values and causing the predictions to also have some negative values.  Since the R2 was under 50% and having negative predictions, leads me to conclude that the linear regression model should not be used to predict ridership.  Analysis should be soley based on samples and not rely on machine learning.</p>
 
 </div>
 </div>
@@ -1360,12 +1361,41 @@ The results from the Mann-Whitney U test provided a p-value of (0.0249999127935)
 <p>5.1    Please discuss potential shortcomings of the methods of your analysis, including:</p>
 <p>5.1 ANSWER:</p>
 <ul>
-<li><strong>Dataset</strong> : As I stated previously, I compared the original master dataset with the improved v2 dataset and had come up with different conclusions.  Not exactly sure why but I would expect that the larger dataset (original master) would be a better set to analyze based on the number of samples and therby would present a more accurate representation of the population.</li>
-<li><strong>Analysis, such as the linear regression model or statistical test</strong> - Again as I stated previously, the linear regression method used (OLS using Statsmodels) did not present good predictions (and weights) based on the value obtained when calculating R2.  If R2 would have been closer to 100% than being under 50% would have made my conclusion different than me stating the method used was inadequate as a predictor.</li>
+<li><strong>Dataset</strong> : As learned from previous feedback, the samples were taken during the month of May, 2011.  It is not clear if this the rainy season in NYC.  Or if 1 month of data is sufficient.  A sample spanning multiple months during different seasons would have been more desirable in determination if rainy weather laffects ridership.</li>
+<li><strong>Analysis, such as the linear regression model or statistical test</strong> - Again as I stated previously, the linear regression method used (OLS using Statsmodels) did not present good predictions (and weights) based on the value obtained when calculating R2.  If R2 would have been closer to 100% than being under 50% I would have made my conclusion different than stating the method used was inadequate as a predictor.</li>
 </ul>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="k">print</span> <span class="s">&quot;Start date: &quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">DATEn</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;End date: &quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">DATEn</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Start date:  05-01-11
+End date:  05-31-11
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -1373,7 +1403,7 @@ The results from the Mann-Whitney U test provided a p-value of (0.0249999127935)
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>5.2    (Optional) Do you have any other insight about the dataset that you would like to share with us?</p>
-<p>5.2 ANSWER: The two datasets (original master and improved v2) resulted in different conclusions.</p>
+<p>5.2 ANSWER: Nothing to contribute.</p>
 
 </div>
 </div>
